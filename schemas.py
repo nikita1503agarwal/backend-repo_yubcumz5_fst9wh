@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Literal
 
 # Example schemas (replace with your own):
 
@@ -37,6 +37,30 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# Cleaning service lead/inquiry schema
+class CleaningInquiry(BaseModel):
+    """
+    Leads for the cleaning company
+    Collection name: "cleaninginquiry"
+    """
+    name: str = Field(..., description="Nombre completo del cliente")
+    email: EmailStr = Field(..., description="Correo electrónico")
+    phone: Optional[str] = Field(None, description="Número de teléfono")
+    address: Optional[str] = Field(None, description="Dirección del servicio")
+    city: str = Field("Zúrich", description="Ciudad")
+    service_type: Literal[
+        "Limpieza de hogar",
+        "Limpieza de fin de obra",
+        "Limpieza de mudanza",
+        "Limpieza de oficina",
+        "Limpieza profunda"
+    ] = Field(..., description="Tipo de servicio")
+    date: Optional[str] = Field(None, description="Fecha preferida (YYYY-MM-DD)")
+    message: Optional[str] = Field(None, description="Detalles adicionales")
+    status: Literal["nuevo", "contactado", "programado", "completado", "cerrado"] = Field(
+        "nuevo", description="Estado del lead"
+    )
 
 # Add your own schemas here:
 # --------------------------------------------------
